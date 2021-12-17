@@ -236,7 +236,7 @@ bottom10 = common_discharges.tail(10)
 st.header('DRGs in Inpatient NY Hospitals')
 st.dataframe(common_discharges)
 
-col1, col2 = st.beta_columns(2)
+col1, col2 = st.columns(2)
 
 col1.header('Top 10 DRGs')
 col1.dataframe(top10)
@@ -300,7 +300,7 @@ bottom10 = common_services.tail(10)
 st.header('APCs in Outpatient NY Facilities')
 st.dataframe(common_services)
 
-col1, col2 = st.beta_columns(2)
+col1, col2 = st.columns(2)
 
 col1.header('Top 10 APCs')
 col1.dataframe(top10)
@@ -330,11 +330,13 @@ st.dataframe(outpatient_sum)
 st.markdown('The table above showcases the average total payments for the facilities of interest. Likewise for inpatient services, Mount Sinai has the highest average total payments for outpatient services compared to Maimonides and Stony Brook.')
 
 #Costs by Condition and Hospital / Average Total Payments
-costs_service_outpatient = outpatient_3_facilities.groupby(['hospital_name', 'apc'])['average_total_payments'].sum().reset_index()
+costs_service_outpatient = outpatient_3_facilities.groupby(['hospital_name', 'apc'])['average_total_payments'].sum().reset_index().sort_values('average_total_payments', ascending=False)
 st.header("Costs by Condition and Outpatient Facility - Average Total Payments")
 st.dataframe(costs_service_outpatient)
 
-temp = costs_service_outpatient.sort_values('average_total_payments', ascending=False)
+# =============================================================================
+# temp = costs_service_outpatient.sort_values('average_total_payments', ascending=False)
+# =============================================================================
 
 st.markdown('The table above showcases the average total payments by APC and facility. The highest total payment for Mount Sinai and SBU Hospital is for level IV endoscopy for the upper airway. On the other hand, the highest total payment for Maimonides is for level II cardiac imaging.')
 
