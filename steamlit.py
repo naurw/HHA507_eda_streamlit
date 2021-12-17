@@ -20,19 +20,18 @@ import time
 
 @st.cache
 def load_hospitals():
-    hospital = pd.read_csv('/Users/William/Desktop/AHI_DataSci_507/Deployment_Streamlit/hospital_info.csv')
+    hospital = pd.read_csv('https://raw.githubusercontent.com/hantswilliams/AHI_STATS_507/main/Week13_Summary/output/df_hospital_2.csv')
     return hospital
 
 @st.cache
-def load_inpatient():
-    inpatient = pd.read_csv('/Users/William/Desktop/AHI_DataSci_507/Deployment_Streamlit/inpatient_2015.csv')
-    return inpatient
-
-@st.cache
 def load_outpatient():
-    outpatient = pd.read_csv('/Users/William/Desktop/AHI_DataSci_507/Deployment_Streamlit/outpatient_2015.csv')
+    outpatient = pd.read_csv('https://raw.githubusercontent.com/hantswilliams/AHI_STATS_507/main/Week13_Summary/output/df_outpatient_2.csv')
     return outpatient
 
+@st.cache
+def load_inpatient():
+    inpatient = pd.read_csv('https://raw.githubusercontent.com/hantswilliams/AHI_STATS_507/main/Week13_Summary/output/df_inpatient_2.csv')
+    return inpatient
 
 #Load the data:     
 hospital = load_hospitals()
