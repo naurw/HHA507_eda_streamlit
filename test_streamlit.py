@@ -45,7 +45,7 @@ st.dataframe(inpatient)
 
 st.title('A Deep Dive on Hospital Performance and Payments in NY Inpatient and Outpatient Facilities')
 st.markdown('By: William Ruan')
-st.markdown('Last updated: :smile:')
+st.markdown('Last updated: :finnadie:')
 st.markdown('The purpose of this exploratory analysis is to compare hospital performance across New York utilizing Python for programming and Streamlit for deployment. The variables used in this case study report includes mortality rate, safety of care, and patient experience. In addition, average total payments for providers in inpatient and outpatient facilities will be compared. This report will also provide a dive into the hospital performance of and total payments to: Stony Brook University Hospital, Maimonides Medical Center, and Mount Sinai Hospital.')
 
 #Creating Menu to look at the datasets used in this dashboard
