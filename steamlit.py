@@ -38,8 +38,9 @@ hospital = load_hospitals()
 inpatient = load_inpatient()
 outpatient = load_outpatient()
 
-
-#---------TITLE OF DASHBOARD----------
+# =============================================================================
+# Title
+# =============================================================================
 
 st.title('Overview of Hospital Performance and Payments in NY Inpatient and Outpatient Facilities in 2015')
 st.markdown('By: William Ruan')
@@ -70,17 +71,15 @@ st.markdown('---')
 st.title('Hospitals in New York')
 newyorkHospitals = hospital[hospital['state'] == 'NY'].sort_values('hospital_name')
 
-#value count of hospitals
+
 nyHospitalTypes = newyorkHospitals['hospital_type'].value_counts().reset_index()
 st.dataframe(nyHospitalTypes)
 st.markdown('The table above indicates the number of different hospitals in New York, as based on the datasets used in this report. As seen within the chart, the majority of New York hospitals are acute care, followed by psychiatric.')
 
-#pie chart of value counts with percentages
 fig = px.pie(nyHospitalTypes, values='hospital_type', names='index')
 st.plotly_chart(fig)
 st.markdown('The pie chart above visualizes the distribution of the types of hospitals within New York. Counts of the hospitals can be found by hovering over the percentages.')
 
-#map of NY hospital locations
 st.subheader('Map of NY Hospital Locations')
 newyorkHospitals_gps = newyorkHospitals['location'].str.strip('()').str.split(' ', expand=True).rename(columns={0: 'Point', 1:'lon', 2:'lat'}) 	
 newyorkHospitals_gps['lon'] = newyorkHospitals_gps['lon'].str.strip('(')
@@ -98,7 +97,7 @@ st.markdown('---')
 st.title('Hospital Performance')        
 st.markdown('The focus in this section will be on comparing the hospital performance of Stony Brook University Hospital, Maimonides Medical Center, and Mount Sinai Hospital with their respective counties: Suffolk, Kings, and New York.')
 
-#creating dataframes for the counties
+
 suffolk = newyorkHospitals[newyorkHospitals['county_name']=='SUFFOLK']
 suffolk = suffolk[['provider_id','hospital_name','city','state','county_name','hospital_type','mortality_national_comparison','safety_of_care_national_comparison','patient_experience_national_comparison']]
 
@@ -115,7 +114,6 @@ newyork = newyork[['provider_id','hospital_name','city','state','county_name','h
 
 st.header('SUFFOLK COUNTY')
 
-#Look at Stony
 st.markdown('<font color=‘blue’>STONY BROOK UNIVERSITY HOSPITAL</font>', unsafe_allow_html=True)
 st.markdown('The table below indicates hospital performance data for SUNY Stony Brook University Hospital. Please click on the drag bar to move to the left or right of this table. When compared at the national level, SBU Hospital is above average for mortality and safety of care. However, it is below the national average in patient experience. This could imply that improved safety of care does not necessarily decrease mortality rate in Stony Brook University Hospital. According to the dataset used and the pie charts below, most hospitals in Suffolk have an above average mortality rate. There is an equal amount of hospitals with above average and below average safety of care in Suffolk County. Most hospitals are below the national average in terms of patient experience. SBU Hospital follows the trends of most Suffolk County hospitals for mortality, safety of care, and patient experience.')
 
@@ -123,7 +121,6 @@ stony = newyorkHospitals.loc[newyorkHospitals['hospital_name'] == 'SUNY/STONY BR
 stony = stony[['provider_id','hospital_name','county_name','hospital_type','mortality_national_comparison','safety_of_care_national_comparison','patient_experience_national_comparison']]
 st.dataframe(stony)
 
-#Look at Suffolk County
 st.markdown('<font color=‘blue’>SUFFOLK COUNTY MORTALITY</font>', unsafe_allow_html=True)
 suffolk_mortality = suffolk['mortality_national_comparison'].value_counts().reset_index()
 suf_mort_pie = px.pie(suffolk_mortality, values='mortality_national_comparison', names='index')
@@ -148,7 +145,6 @@ st.plotly_chart(suffolk_patient_exp)
 
 st.header('KINGS COUNTY')
 
-#Look at Maimonides
 st.markdown('<font color=‘green’>MAIMONIDES MEDICAL CENTER</font>', unsafe_allow_html=True)
 st.markdown('The table below indicates hospital performance data for Maimonides Medical Center. When compared at the national level, Maimonides Medical Center has: above average in mortality rate and below average in safety of care and patient experience. When compared to the rest of the hospitals in Kings County, Maimonides Medical Center is doing worse in terms of mortality rate. Most hospitals in this county have below the national average for safety of care and patient experience.')
 
@@ -156,7 +152,6 @@ maimonides = newyorkHospitals.loc[newyorkHospitals['hospital_name'] == 'MAIMONID
 maimonides = maimonides[['provider_id','hospital_name','county_name','hospital_type','mortality_national_comparison','safety_of_care_national_comparison','patient_experience_national_comparison']]
 st.dataframe(maimonides)
 
-#Look at Kings County
 kings_mortality = kings['mortality_national_comparison'].value_counts().reset_index()
 
 st.markdown('<font color=‘green’>KINGS COUNTY MORTALITY</font>', unsafe_allow_html=True)
@@ -182,7 +177,7 @@ st.plotly_chart(kings_patient_exp)
 # =============================================================================
 st.header('NEW YORK COUNTY')
 
-#Look at Mount Sinai
+
 st.markdown('<font color=‘orange’>MOUNT SINAI HOSPITAL</font>', unsafe_allow_html=True)
 st.markdown('The table below indicates hospital performance data for Mount Sinai Hospital. When compared at the national level, Mount Sinai Hospital is above the national average for mortality and safety of care. However, it is below the national average for patient experience. In New York County, most hospitals are above average in terms of mortality rate and below average in terms of patient experience. However, Mount Sinai is doing better compared to other hospitals in New York County in terms of safety of care.')
 
@@ -190,7 +185,7 @@ sinai = newyorkHospitals.loc[newyorkHospitals['hospital_name'] == 'MOUNT SINAI H
 sinai = sinai[['provider_id','hospital_name','county_name','hospital_type','mortality_national_comparison','safety_of_care_national_comparison','patient_experience_national_comparison']]
 st.dataframe(sinai)
 
-#Look at New York County as a whole
+
 ny_mortality = newyork['mortality_national_comparison'].value_counts().reset_index()
 
 st.markdown('<font color=‘orange’>NEW YORK COUNTY MORTALITY</font>', unsafe_allow_html=True)
@@ -250,8 +245,6 @@ col2.header('Bottom 10 DRGs')
 col2.dataframe(bottom10)
 
 
-#Bar Charts of the costs
-#First filtering inpatient_ny to hospitals of interest
 inpatient_3_hospitals = nyInpatient.loc[(nyInpatient['hospital_name']=='MOUNT SINAI HOSPITAL') | (nyInpatient['hospital_name']=='SUNY/STONY BROOK UNIVERSITY HOSPITAL') | (nyInpatient['hospital_name']=='MAIMONIDES MEDICAL CENTER')]
 costs = inpatient_3_hospitals.groupby('hospital_name')['average_total_payments'].sum().reset_index()
 costs['average_total_payments'] = costs['average_total_payments'].astype('int64')
@@ -274,7 +267,7 @@ st.header("Hospital Average Payments")
 st.dataframe(costs_sum)
 st.markdown('The table above showcases the average total payments, average Medicare payments, and non-Medicare payments for the hospitals of interest. Mount Sinai has the largest non-Medicare total payment compared to Maimonides and Stony Brook.')
 
-#Costs by Condition and Hospital / Average Total Payments
+
 costs_condition_hospital = inpatient_3_hospitals.groupby(['hospital_name', 'drg_definition'])['average_total_payments'].sum().reset_index()
 st.header("Costs by Condition and Hospital - Average Total Payments")
 st.dataframe(costs_condition_hospital)
@@ -285,8 +278,9 @@ st.markdown('---')
 
 
 
-
-#---------Outpatient Payments-----------------
+# =============================================================================
+# Outpatient Payments
+# =============================================================================
 st.title('Outpatient Payments')
 
 outpatientMerged = outpatient.merge(newyorkHospitals, how='left', on='provider_id')
