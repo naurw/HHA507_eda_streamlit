@@ -214,6 +214,12 @@ st.markdown('---')
 #-------Inpatient Payments---------------
 st.title('Inpatient Payments')
 
+outpatient['provider_id'] = outpatient['provider_id'].astype(str)
+outpatient['provider_id'].dtype
+
+inpatient['provider_id'] = inpatient['provider_id'].astype(str)
+inpatient['provider_id'].dtype
+
 inpatientMerged = inpatient.merge(newyorkHospitals, how='left', on='provider_id')
 inpatientMerged = inpatientMerged[inpatientMerged['hospital_name'].notna()]
 nyInpatient = inpatientMerged[inpatientMerged['state'] == 'NY']
