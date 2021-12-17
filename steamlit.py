@@ -305,7 +305,7 @@ col2.dataframe(bottom10)
 
 
 #Drilling down to 3 facilities of interest
-outpatient_3_facilities = nyOutpatient.loc[(nyOutpatient['hospital_name']=='Mount Sinai Hospital') | (outpatient_ny['hospital_name']=='SUNY/STONY BROOK UNIVERSITY HOSPITAL') | (outpatient_ny['hospital_name']=='Maimonides Medical Center')]
+outpatient_3_facilities = nyOutpatient.loc[(nyOutpatient['hospital_name']=='MOUNT SINAI HOSPITAL') | (nyOutpatient['hospital_name']=='SUNY/STONY BROOK UNIVERSITY HOSPITAL') | (nyOutpatient['hospital_name']=='MAIMONIDES MEDICAL CENTER')]
 
 #Outpatient Average Payments
 st.header('Average Total Payments in Maimonides, Mount Sinai, and Stony Brook University Hospital for Outpatient Services')
