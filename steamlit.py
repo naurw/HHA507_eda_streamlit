@@ -41,13 +41,13 @@ outpatient = load_outpatient()
 
 #---------TITLE OF DASHBOARD----------
 
-st.title('A Deep Dive on Hospital Performance and Payments in NY Inpatient and Outpatient Facilities')
+st.title('Overview of Hospital Performance and Payments in NY Inpatient and Outpatient Facilities in 2015')
 st.markdown('By: William Ruan')
 st.markdown('Last updated: December 15th, 2021')
 st.markdown('The purpose of this exploratory analysis is to compare hospital performance across New York utilizing Python for programming and Streamlit for deployment. The variables used in this case study report includes mortality rate, safety of care, and patient experience. In addition, average total payments for providers in inpatient and outpatient facilities will be compared. This report will also provide a dive into the hospital performance of and total payments to: Stony Brook University Hospital, Maimonides Medical Center, and Mount Sinai Hospital.')
 
 #Creating Menu to look at the datasets used in this dashboard
-st.markdown('Three national-level datasets were used in this report. To review each dataset, please click on the select bar below. However, please note that due to the number of observations within these dataset, loading time may take some time. Please give it a moment and take a sip of your favorite drink. :smile:')
+st.markdown('Three national-level datasets were used in this report. To review each dataset, click on the drop down bar below. However, please note that due to the number of observations within these dataset, loading time may take some time. Please give it a moment and take a sip of your favorite drink. :smile:')
 selectbar = st.selectbox('Select Dataset', ("Hospital Experience", "Inpatient Payments", "Outpatient Payments"))
 
 
@@ -62,7 +62,9 @@ def get_dataset(selectbar):
 st.write(get_dataset(selectbar))
 
 
-#-----------HOSPITALS IN NY-------------
+# =============================================================================
+# Hospitals in New York
+# =============================================================================
 
 st.markdown('---')
 st.title('Hospitals in New York')
@@ -71,12 +73,12 @@ newyorkHospitals = hospital[hospital['state'] == 'NY'].sort_values('hospital_nam
 #value count of hospitals
 nyHospitalTypes = newyorkHospitals['hospital_type'].value_counts().reset_index()
 st.dataframe(nyHospitalTypes)
-st.markdown('The table above shows the number of different hospitals in NY, as based on the datasets used in this report. The majority of NY hospitals are acute care, followed by psychiatric.')
+st.markdown('The table above indicates the number of different hospitals in New York, as based on the datasets used in this report. As seen within the chart, the majority of New York hospitals are acute care, followed by psychiatric.')
 
 #pie chart of value counts with percentages
 fig = px.pie(nyHospitalTypes, values='hospital_type', names='index')
 st.plotly_chart(fig)
-st.markdown('Above is a pie chart to better visualize the distribution of the types of hospitals in NY that are in the datasets used in this report. To view the counts of the hospitals, please hover over the percentages.')
+st.markdown('The pie chart above visualizes the distribution of the types of hospitals within New York. Counts of the hospitals can be found by hovering over the percentages.')
 
 #map of NY hospital locations
 st.subheader('Map of NY Hospital Locations')
@@ -86,15 +88,15 @@ newyorkHospitals_gps = newyorkHospitals_gps.dropna()
 newyorkHospitals_gps['lon'] = pd.to_numeric(newyorkHospitals_gps['lon'])
 newyorkHospitals_gps['lat'] = pd.to_numeric(newyorkHospitals_gps['lat'])
 st.map(newyorkHospitals_gps)
-st.markdown('To explore the locations of these hospitals, please utilize the map above. You can zoom in and out of the map using the scroll button on your mouse. Based on the map, we see that there is a heavy concentration of hospitals within the NYC area.')
+st.markdown('The interactive map above can be utilized to explore the locations of New York hospitals. Based on the map data, majority of the hospitals are within New York City.')
 
-
-
-#-----------HOSPITAL PERFORMANCE------------
+# =============================================================================
+# Hospital Performance
+# =============================================================================
 
 st.markdown('---')
 st.title('Hospital Performance')        
-st.markdown('In this section, the focus will be on comparing the hospital performance of Stony Brook University Hospital, Maimonides Medical Center, and Mount Sinai Hospital with their respective counties: Suffolk, Kings, and New York.')
+st.markdown('The focus in this section will be on comparing the hospital performance of Stony Brook University Hospital, Maimonides Medical Center, and Mount Sinai Hospital with their respective counties: Suffolk, Kings, and New York.')
 
 #creating dataframes for the counties
 suffolk = newyorkHospitals[newyorkHospitals['county_name']=='SUFFOLK']
@@ -107,9 +109,10 @@ newyork = newyorkHospitals[newyorkHospitals['county_name']=='NEW YORK']
 newyork = newyork[['provider_id','hospital_name','city','state','county_name','hospital_type','mortality_national_comparison','safety_of_care_national_comparison','patient_experience_national_comparison']]
 
 
+# =============================================================================
+# Suffolk County 
+# =============================================================================
 
-
-#------SUFFOLK COUNTY-------------
 st.header('SUFFOLK COUNTY')
 
 #Look at Stony
@@ -139,13 +142,15 @@ suffolk_patient_exp = px.pie(suffolk_patient, values='patient_experience_nationa
 st.plotly_chart(suffolk_patient_exp)
 
 
+# =============================================================================
+# Kings County 
+# =============================================================================
 
-#------KINGS COUNTY-------------
 st.header('KINGS COUNTY')
 
 #Look at Maimonides
 st.markdown('<font color=‘green’>MAIMONIDES MEDICAL CENTER</font>', unsafe_allow_html=True)
-st.markdown('The table below indicates hospital performance data for Maimonides Medical Center. Please click on the drag bar to move to the left or right of this table. When compared at the national level, Maimonides Medical Center has above average in mortality rate and below average in safety of care and patient experience. When compared to the rest of the hospitals in Kings County, Maimonides Medical Center is doing worse in terms of mortality rate. Most hospitals in this county have below the national average for safety of care and patient experience.')
+st.markdown('The table below indicates hospital performance data for Maimonides Medical Center. When compared at the national level, Maimonides Medical Center has: above average in mortality rate and below average in safety of care and patient experience. When compared to the rest of the hospitals in Kings County, Maimonides Medical Center is doing worse in terms of mortality rate. Most hospitals in this county have below the national average for safety of care and patient experience.')
 
 maimonides = newyorkHospitals.loc[newyorkHospitals['hospital_name'] == 'MAIMONIDES MEDICAL CENTER']
 maimonides = maimonides[['provider_id','hospital_name','county_name','hospital_type','mortality_national_comparison','safety_of_care_national_comparison','patient_experience_national_comparison']]
@@ -172,14 +177,14 @@ kings_patient_exp = px.pie(kings_patient, values='patient_experience_national_co
 st.plotly_chart(kings_patient_exp)
 
 
-
-
-#------NEW YORK COUNTY-------------
+# =============================================================================
+# New York County 
+# =============================================================================
 st.header('NEW YORK COUNTY')
 
 #Look at Mount Sinai
 st.markdown('<font color=‘orange’>MOUNT SINAI HOSPITAL</font>', unsafe_allow_html=True)
-st.markdown('The table below indicates hospital performance data for Mount Sinai Hospital. Please click on the drag bar to move to the left or right of this table. When compared at the national level, Mount Sinai Hospital is above the national average for mortality and safety of care. However, it is below the national average for patient experience. In New York County, most hospitals are above average in terms of mortality rate and below average in terms of patient experience. However, Mount Sinai is doing better compared to other hospitals in New York County in terms of safety of care.')
+st.markdown('The table below indicates hospital performance data for Mount Sinai Hospital. When compared at the national level, Mount Sinai Hospital is above the national average for mortality and safety of care. However, it is below the national average for patient experience. In New York County, most hospitals are above average in terms of mortality rate and below average in terms of patient experience. However, Mount Sinai is doing better compared to other hospitals in New York County in terms of safety of care.')
 
 sinai = newyorkHospitals.loc[newyorkHospitals['hospital_name'] == 'MOUNT SINAI HOSPITAL']
 sinai = sinai[['provider_id','hospital_name','county_name','hospital_type','mortality_national_comparison','safety_of_care_national_comparison','patient_experience_national_comparison']]
@@ -209,9 +214,9 @@ st.plotly_chart(ny_patient_exp)
 
 st.markdown('---')
 
-
-
-#-------Inpatient Payments---------------
+# =============================================================================
+# Inpatient
+# =============================================================================
 st.title('Inpatient Payments')
 
 outpatient['provider_id'] = outpatient['provider_id'].astype(str)
@@ -225,7 +230,7 @@ inpatientMerged = inpatientMerged[inpatientMerged['hospital_name'].notna()]
 nyInpatient = inpatientMerged[inpatientMerged['state'] == 'NY']
 total_inpatient_count = sum(nyInpatient['total_discharges'])
 
-st.markdown('Below you will find the total discharges for each type of DRG in NY inpatient hospitals. The most discharges involve septicemia or sever sepsis, while the least discharges involve O.R. procedures for multiple significant trauma. The total number of discharges from inpatient hospitals in NY is 425742.')
+st.markdown('Below are the total discharges for each type of diagnosis related group (DRG) in NY hospitals. The most discharges involve septicemia or sever sepsis, while the least discharges involve O.R. procedures for multiple significant trauma. The total number of discharges from inpatient hospitals in NY is 425742.')
 ##Common D/C 
 common_discharges = nyInpatient.groupby('drg_definition')['total_discharges'].sum().reset_index()
 common_discharges = common_discharges.sort_values('total_discharges', ascending=False)
@@ -327,17 +332,14 @@ st.markdown('This bar graph above represents the average total payments for Maim
 
 st.header("Outpatient Average Payments")
 st.dataframe(outpatient_sum)
-st.markdown('The table above showcases the average total payments for the facilities of interest. Likewise for inpatient services, Mount Sinai has the highest average total payments for outpatient services compared to Maimonides and Stony Brook.')
+st.markdown('The table above showcases the average total payments for the facilities of interest. Likewise, Mount Sinai has the highest average total payments for outpatient services when compared to Maimonides and Stony Brook.')
 
 #Costs by Condition and Hospital / Average Total Payments
 costs_service_outpatient = outpatient_3_facilities.groupby(['hospital_name', 'apc'])['average_total_payments'].sum().reset_index().sort_values('average_total_payments', ascending=False)
 st.header("Costs by Condition and Outpatient Facility - Average Total Payments")
 st.dataframe(costs_service_outpatient)
 
-# =============================================================================
-# temp = costs_service_outpatient.sort_values('average_total_payments', ascending=False)
-# =============================================================================
 
-st.markdown('The table above showcases the average total payments by APC and facility. The highest total payment for Mount Sinai and SBU Hospital is for level IV endoscopy for the upper airway. On the other hand, the highest total payment for Maimonides is for level II cardiac imaging.')
+st.markdown('The table above showcases the average total payments by APC and facility. The highest total payment for Mount Sinai and SBU Hospital is for level IV endoscopy for the upper airway. However, the highest total payment for Maimonides is for level II cardiac imaging.')
 
 st.markdown('---')
