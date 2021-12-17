@@ -6,6 +6,11 @@ Created on Mon Dec 13 15:34:26 2021
 @author: William
 """
 
+''' 
+Note to viewers: 
+    - Due to the size of this file at its current state, not all outputs were commented
+    - To view results of the codes provided, feel free to fun within your IDE
+'''
 import pandas as pd 
 import glob
 import os
@@ -594,6 +599,8 @@ bhs = newyorkHospitals.loc[newyorkHospitals['hospital_name'] == 'BELLEVUE HOSPIT
 bhsCleaned = bhs.dropna(axis= 1)
 sbu_vs_nyu_vs_bhs = pd.concat([nyuCleaned, sbuCleaned, bhsCleaned])
 
+mmc = newyorkHospitals.loc[newyorkHospitals['hospital_name'] == 'MAIMONIDES MEDICAL CENTER']
+
 # =============================================================================
 # Visualizations
 # =============================================================================
@@ -696,3 +703,17 @@ plt.show()
 # sbuecmo = sbuInpatient['drg_definition'].filter(like='ECMO OR TRACH')
 # 
 # =============================================================================
+
+
+inpatientMerged = inpatient.merge(newyorkHospitals, how='left', on='provider_id')
+inpatientMerged = inpatientMerged[inpatientMerged['hospital_name'].notna()]
+nyInpatient = inpatientMerged[inpatientMerged['state'] == 'NY']
+inpatient_3_hospitals = nyInpatient.loc[(nyInpatient['hospital_name']=='MOUNT SINAI HOSPITAL') | (nyInpatient['hospital_name']=='SUNY/STONY BROOK UNIVERSITY HOSPITAL') | (nyInpatient['hospital_name']=='MAIMONIDES MEDICAL CENTER')]
+costs = inpatient_3_hospitals.groupby('hospital_name')['average_total_payments'].sum().reset_index()
+costs['average_total_payments'] = costs['average_total_payments'].astype('int64')
+
+costs_medicare = inpatient_3_hospitals.groupby('hospital_name')['average_medicare_payments'].sum().reset_index()
+costs_medicare['average_medicare_payments'] = costs_medicare['average_medicare_payments'].astype('int64')
+costs_sum = costs.merge(costs_medicare, how='left', left_on='hospital_name', right_on='hospital_name')
+costs_sum['delta'] = costs_sum['average_total_payments'] - costs_sum['average_medicare_payments']
+costs_sum = costs_sum.sort_values('average_total_payments', ascending=False)
